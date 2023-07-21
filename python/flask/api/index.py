@@ -149,7 +149,7 @@ def ask():
     return jsonify(answer=history.strip("\n"))
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run()
 # if __name__ == "__main__":
     # # 测试时候在此处正确填写相关信息即可运行
     # while True:
