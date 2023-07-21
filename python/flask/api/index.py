@@ -6,10 +6,10 @@ import hmac
 import json
 from urllib.parse import urlparse
 import ssl
+from datetime import datetime
 from time import mktime
 from urllib.parse import urlencode
 from wsgiref.handlers import format_date_time
-
 import websocket
 from flask import Flask, request, jsonify
 
@@ -149,7 +149,7 @@ def ask():
     return jsonify(answer=history.strip("\n"))
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(debug=True)
 # if __name__ == "__main__":
     # # 测试时候在此处正确填写相关信息即可运行
     # while True:
