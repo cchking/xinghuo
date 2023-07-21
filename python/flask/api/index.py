@@ -144,6 +144,7 @@ history = ''
 @app.route('/ask', methods=['POST'])
 def ask():
     global history
+    history = ''
     question = request.json['question']
     main(question)
     return jsonify(answer=history.strip("\n"))
