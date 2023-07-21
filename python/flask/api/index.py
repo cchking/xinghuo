@@ -119,9 +119,7 @@ def gen_params(appid, question):
         },
         "payload": {
             "message": {
-                "text": [
-                    {"role": "user", "content": question}
-                ]
+                "text": question
             }
         }
     }
