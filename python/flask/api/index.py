@@ -112,8 +112,8 @@ def gen_params(appid, question):
         "parameter": {
             "chat": {
                 "domain": "general",
-                "random_threshold": 0.5,
-                "max_tokens": 2048,
+                "random_threshold": 0.7,
+                "max_tokens": 4096,
                 "auditing": "default"
             }
         },
