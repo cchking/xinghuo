@@ -10,11 +10,8 @@ from datetime import datetime
 from time import mktime
 from urllib.parse import urlencode
 from wsgiref.handlers import format_date_time
-
 import websocket
 from flask import Flask, request, jsonify
-import json
-import requests
 
 # 创建 Flask 应用
 app = Flask(__name__)
@@ -116,15 +113,13 @@ def gen_params(appid, question, temperature):
             "chat": {
                 "domain": "general",
                 "random_threshold": temperature,
-                "max_tokens": 2048,
+                "max_tokens": 4096,
                 "auditing": "default"
             }
         },
         "payload": {
             "message": {
-                "text": [
-                    {"role": "user", "content": question}
-                ]
+                "text": question
             }
         }
     }
@@ -148,13 +143,14 @@ history = ''
 @app.route('/ask', methods=['POST'])
 def ask():
     global history
+    history = ''
     question = request.json['question']
     temperature = request.json['temperature']
-    answer = main(question, temperature)
+    main(question, temperature)
     return jsonify(answer=history.strip("\n"))
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run()
 # if __name__ == "__main__":
     # # 测试时候在此处正确填写相关信息即可运行
     # while True:
