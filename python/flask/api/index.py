@@ -10,8 +10,11 @@ from datetime import datetime
 from time import mktime
 from urllib.parse import urlencode
 from wsgiref.handlers import format_date_time
+
 import websocket
 from flask import Flask, request, jsonify
+import json
+import requests
 
 # 创建 Flask 应用
 app = Flask(__name__)
@@ -76,7 +79,7 @@ def on_open(ws):
 
 
 def run(ws, *args):
-    data = json.dumps(gen_params(appid=ws.appid, question=ws.question))
+    data = json.dumps(gen_params(appid=ws.appid, question=ws.question, temperature=ws.temperature))
     ws.send(data)
 
 
@@ -100,7 +103,7 @@ def on_message(ws, message):
             ws.close()
 
 
-def gen_params(appid, question):
+def gen_params(appid, question, temperature):
     """
     通过appid和用户的提问来生成请参数
     """
@@ -112,21 +115,23 @@ def gen_params(appid, question):
         "parameter": {
             "chat": {
                 "domain": "general",
-                "random_threshold": 0.7,
-                "max_tokens": 4096,
+                "random_threshold": temperature,
+                "max_tokens": 2048,
                 "auditing": "default"
             }
         },
         "payload": {
             "message": {
-                "text": question
+                "text": [
+                    {"role": "user", "content": question}
+                ]
             }
         }
     }
     return data
 
 
-def main(question, appid="8d6ffacc", api_secret="MTE2MzJhOGZmMmQ4YWY4ZTIwZDM3MGUx",
+def main(question, temperature, appid="8d6ffacc", api_secret="MTE2MzJhOGZmMmQ4YWY4ZTIwZDM3MGUx",
          api_key="f59bd4857aff54509640b4cb2de89f20", gpt_url="ws://spark-api.xf-yun.com/v1.1/chat"):
     wsParam = Ws_Param(appid, api_key, api_secret, gpt_url)
     websocket.enableTrace(False)
@@ -134,6 +139,7 @@ def main(question, appid="8d6ffacc", api_secret="MTE2MzJhOGZmMmQ4YWY4ZTIwZDM3MGU
     ws = websocket.WebSocketApp(wsUrl, on_message=on_message, on_error=on_error, on_close=on_close, on_open=on_open)
     ws.appid = appid
     ws.question = question
+    ws.temperature = temperature
     ws.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
 @app.route('/')
 def welcome():
@@ -142,13 +148,13 @@ history = ''
 @app.route('/ask', methods=['POST'])
 def ask():
     global history
-    history = ''
     question = request.json['question']
-    main(question)
+    temperature = request.json['temperature']
+    answer = main(question, temperature)
     return jsonify(answer=history.strip("\n"))
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', debug=True)
 # if __name__ == "__main__":
     # # 测试时候在此处正确填写相关信息即可运行
     # while True:
