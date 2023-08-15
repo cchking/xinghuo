@@ -126,8 +126,8 @@ def gen_params(appid, question, temperature):
     return data
 
 
-def main(question, temperature, appid="8d6ffacc", api_secret="MTE2MzJhOGZmMmQ4YWY4ZTIwZDM3MGUx",
-         api_key="f59bd4857aff54509640b4cb2de89f20", gpt_url="ws://spark-api.xf-yun.com/v1.1/chat"):
+def main(question, temperature, appid="b839ff3b", api_secret="MDBhMjFiODU0YTZmZTY0OWRiMTY3OTZl",
+         api_key="aa942113e95ad29291f0a901eea28b1c", gpt_url="ws://spark-api.xf-yun.com/v1.1/chat"):
     wsParam = Ws_Param(appid, api_key, api_secret, gpt_url)
     websocket.enableTrace(False)
     wsUrl = wsParam.create_url()
