@@ -113,7 +113,7 @@ def gen_params(appid, question, temperature):
             "chat": {
                 "domain": "general",
                 "random_threshold": temperature,
-                "max_tokens": 14096,
+                "max_tokens": 4096,
                 "auditing": "default"
             }
         },
